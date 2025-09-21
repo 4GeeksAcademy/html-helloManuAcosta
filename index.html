@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Ejemplo de Formulario de Pago</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" xintegrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" xintegrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ99G8xmhK1eJt9gT/fO7/5/k/5/T6/s/r+K9n/iQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+      /* Estilos personalizados para el formulario */
+      .card {
+        border-radius: 0.5rem;
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+      }
+      .alert {
+        border-radius: 0.25rem;
+      }
+      .form-control:focus {
+        border-color: #80bdff;
+        box-shadow: 0 0 0 0.25rem rgba(0, 123, 255, 0.25);
+      }
+      .btn-primary {
+        background-color: #0d6efd;
+        border-color: #0d6efd;
+        border-radius: 0.25rem;
+      }
+      .btn-secondary {
+        background-color: #6c757d;
+        border-color: #6c757d;
+        border-radius: 0.25rem;
+      }
+      .btn:focus, .btn:active {
+        box-shadow: none !important;
+      }
+      .form-control.no-border {
+        border-right: none;
+        border-radius: 0.25rem 0 0 0.25rem;
+      }
+      .input-group-text {
+        border-left: none;
+        background-color: #fff;
+        border-radius: 0 0.25rem 0.25rem 0;
+      }
+      /* Se agregaron nuevos estilos para el fondo de las tarjetas */
+      .payment-options {
+        background-color: #343a40;
+        border-radius: 0.25rem;
+        display: flex;
+        align-items: center;
+        padding: 0.5rem;
+        color: #fff;
+        width: fit-content; /* Se ajusta el ancho del contenedor */
+      }
+      .payment-option-item {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        margin-right: 1.5rem; /* Ajusta la separación entre los íconos */
+      }
+      .payment-option-item:last-child {
+        margin-right: 0;
+      }
+      .payment-option-item input[type="radio"] {
+        appearance: none;
+        -webkit-appearance: none;
+        width: 1rem;
+        height: 1rem;
+        border: 2px solid #fff;
+        border-radius: 50%;
+        margin-right: 0.5rem;
+        cursor: pointer;
+        outline: none;
+      }
+      .payment-option-item input[type="radio"]:checked {
+        background-color: #6c757d; /* Color del punto interior */
+        border-color: #6c757d;
+        box-shadow: 0 0 0 2px #fff;
+      }
+      .payment-option-item .fa-brands {
+          color: #fff;
+          font-size: 1.5rem;
+      }
+      /* Estilos para que el ícono de fecha se muestre */
+      input[type="date"]::-webkit-calendar-picker-indicator {
+        opacity: 1;
+        display: block;
+        background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>') no-repeat;
+        width: 1.25rem;
+        height: 1.25rem;
+        background-size: contain;
+        cursor: pointer;
+      }
+      /* Se agrega un estilo para el texto de notas */
+      .notes-text {
+        font-size: 0.875rem;
+        color: #6c757d;
+        margin-top: 0.25rem;
+      }
+      /* Se agrega un estilo para la línea divisoria */
+      .card-footer {
+        border-top: 1px solid #dee2e6;
+        padding-top: 1rem;
+        background-color: transparent;
+      }
+      /* Estilos para el select del estado */
+      .form-select {
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e"), url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M14 11L8 5 2 11'/%3e%3c/svg%3e");
+        background-position: right 0.75rem center, right 0.75rem center;
+        background-repeat: no-repeat;
+        background-size: 1rem 0.5rem;
+        padding-right: 2.5rem;
+        
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container py-5">
+      <div class="card">
+        <!-- Encabezado del formulario con la línea divisoria -->
+        <div class="card-header bg-transparent">
+          <h4 class="mb-0">Payment form example</h4>
+        </div>
+        
+        <!-- Cuerpo del formulario -->
+        <div class="card-body">
+          <!-- Alerta de campos faltantes -->
+          <div class="alert alert-danger" role="alert">
+            Some fields are missing
+          </div>
+
+          <form>
+            <div class="row">
+              <!-- Campo de Número de Tarjeta -->
+              <div class="col-12 col-md-6 mb-3">
+                <label for="card-number" class="form-label">Card #</label>
+                <input type="text" class="form-control" id="card-number" placeholder="XXXXXXXXXXXXXXXX" required pattern="\d{16}" maxlength="16" title="Debe tener 16 dígitos.">
+              </div>
+              
+              <!-- Campo CVC -->
+              <div class="col-6 col-md-3 mb-3">
+                <label for="cvc-number" class="form-label">CVC #</label>
+                <input type="text" class="form-control" id="cvc-number" placeholder="0000" required pattern="\d{3,4}" maxlength="4" title="Debe tener 3 o 4 dígitos.">
+              </div>
+              
+              <!-- Campo de Monto -->
+              <div class="col-6 col-md-3 mb-3">
+                <label for="amount" class="form-label">Amount</label>
+                <div class="input-group">
+                  <span class="input-group-text">$</span>
+                  <input type="number" class="form-control" id="amount" placeholder="Amount" required min="1" step="0.01">
+                </div>
+              </div>
+            </div>
+            
+            <div class="row">
+              <!-- Campo de Nombre -->
+              <div class="col-12 col-md-6 mb-3">
+                <label for="first-name" class="form-label">First Name</label>
+                <input type="text" class="form-control" id="first-name" required>
+              </div>
+              
+              <!-- Campo de Apellido -->
+              <div class="col-12 col-md-6 mb-3">
+                <label for="last-name" class="form-label">Last Name</label>
+                <input type="text" class="form-control" id="last-name" required>
+              </div>
+            </div>
+
+            <div class="row">
+              <!-- Campo de Ciudad -->
+              <div class="col-12 col-md-6 mb-3">
+                <label for="city" class="form-label">City</label>
+                <input type="text" class="form-control" id="city" required>
+              </div>
+              
+              <!-- Campo de Estado -->
+              <div class="col-8 col-md-4 mb-3">
+                <label for="state" class="form-label">State</label>
+                <select class="form-select" id="state" required>
+                  <option selected disabled value="">Pick a state</option>
+                  <option value="cdmx">Mexico City</option>
+                  <option value="jal">Jalisco</option>
+                  <option value="nl">Nuevo Leon</option>
+                </select>
+              </div>
+              
+              <!-- Campo de Código Postal -->
+              <div class="col-4 col-md-2 mb-3">
+                <label for="postal-code" class="form-label">Postal Code</label>
+                <input type="text" class="form-control" id="postal-code" required pattern="[0-9]{5}" maxlength="5" title="Debe tener 5 dígitos numéricos.">
+              </div>
+            </div>
+
+            <div class="row">
+              <!-- Sección "We accept" -->
+              <div class="col-12 col-md-6 mb-3">
+                <p class="mb-2">We accept:</p>
+                <div class="payment-options">
+                    <label class="payment-option-item">
+                        <input type="radio" name="payment-method" value="mastercard" checked>
+                        <i class="fa-brands fa-cc-mastercard"></i>
+                    </label>
+                    <label class="payment-option-item">
+                        <input type="radio" name="payment-method" value="visa">
+                        <i class="fa-brands fa-cc-visa"></i>
+                    </label>
+                    <label class="payment-option-item">
+                        <input type="radio" name="payment-method" value="amex">
+                        <i class="fa-brands fa-cc-amex"></i>
+                    </label>
+                    <label class="payment-option-item">
+                        <input type="radio" name="payment-method" value="discover">
+                        <i class="fa-brands fa-cc-discover"></i>
+                    </label>
+                </div>
+              </div>
+
+              <!-- Campo de Mensaje -->
+              <div class="col-12 col-md-6 mb-3">
+                <label for="message" class="form-label">Message</label>
+                <textarea class="form-control" id="message" rows="3"></textarea>
+                <p class="notes-text">Add any notes here.</p>
+              </div>
+            </div>
+          </form>
+        </div>
+        
+        <!-- Línea divisoria y botones de acción -->
+        <div class="card-footer d-flex justify-content-end">
+          <button type="reset" class="btn btn-secondary me-2">Cancel</button>
+          <button type="submit" class="btn btn-primary">Send</button>
+        </div>
+
+      </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" xintegrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+  </body>
+</html>
